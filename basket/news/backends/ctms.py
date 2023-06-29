@@ -113,8 +113,12 @@ def from_vendor(contact):
                 if newsletter["subscribed"]:
                     data.setdefault("newsletters", []).append(newsletter["name"])
         elif group_name == "waitlists":
-            # Unimported per-waitlist data: source, extra fields...
+            # For Basket, CTMS waitlists are just newsletters.
+            # We don't import certain data like source and extra fields.
             for waitlist in group:
+                # Only present subscribed waitlists to users.
+                if not waitlist.get("subcribed", True):
+                    continue
                 wl_name = waitlist["name"]
                 # Legacy waitlist format. For backward compatibility.
                 # See `to_vendor()`` and `waitlist_fields_for_slug()` for the inverse.
